@@ -8,11 +8,22 @@ else
   DOC_ROOT=${DOC_ROOT//\'/}
 fi
 
+if [ "$PHP_DOC_ROOT" == "" ]; then
+  PHP_DOC_ROOT="/var/www/web"
+else
+  PHP_DOC_ROOT=${PHP_DOC_ROOT//\"/}
+  PHP_DOC_ROOT=${PHP_DOC_ROOT//\'/}
+fi
+
+if [ "$PHP_HOST" == "" ]; then
+  PHP_HOST="php"
+fi
+
 cat <<EOF > /usr/local/apache2/conf/vhost.conf
 <VirtualHost *:80>
     servername localhost
     serveralias *.localhost
-    ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php:9000$DOC_ROOT/\$1
+    ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://$PHP_HOST:9000$PHP_DOC_ROOT/\$1
     ProxyTimeout 300
     DocumentRoot "$DOC_ROOT"
     <Directory "$DOC_ROOT">
@@ -24,7 +35,7 @@ cat <<EOF > /usr/local/apache2/conf/vhost.conf
 <VirtualHost *:443>
     servername localhost
     serveralias *.localhost
-    ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php:9000$DOC_ROOT/\$1
+    ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://$PHP_HOST:9000$PHP_DOC_ROOT/\$1
     ProxyTimeout 300
     DocumentRoot "$DOC_ROOT"
     
