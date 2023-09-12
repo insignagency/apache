@@ -9,7 +9,7 @@ else
 fi
 
 if [ "$PHP_DOC_ROOT" == "" ]; then
-  PHP_DOC_ROOT="/var/www/web"
+  PHP_DOC_ROOT=$DOC_ROOT
 else
   PHP_DOC_ROOT=${PHP_DOC_ROOT//\"/}
   PHP_DOC_ROOT=${PHP_DOC_ROOT//\'/}
